@@ -51,7 +51,7 @@ const BitMap = struct {
 pub fn main() !void {
     var a = gpa.allocator();
 
-    const n: u128 = 260_000_000_000;
+    const n: u128 = 1_000_000_000;
     const n_sqrt = sqrt(n);
     const len = n / (3 * 128) + 1;
 
