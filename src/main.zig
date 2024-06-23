@@ -18,10 +18,10 @@ fn sqrt(value: u128) usize {
 }
 
 const BitMap = struct {
-    bitmap: []u128,
+    bitmap: []u256,
 
     pub fn init(a: *std.mem.Allocator, length: usize) !BitMap {
-        var arr = try a.alloc(u128, length);
+        var arr = try a.alloc(u256, length);
         for (0..length) |i| {
             arr[i] = 0;
         }
@@ -29,20 +29,20 @@ const BitMap = struct {
         return BitMap{ .bitmap = arr };
     }
 
-    pub fn set(self: *BitMap, idx: u128) void {
-        const div: usize = @intCast(idx / 128);
-        const rem: u7 = @intCast(idx % 128);
-        var val: u128 = 1;
+    pub fn set(self: *BitMap, idx: usize) void {
+        const div: usize = @intCast(idx / 256);
+        const rem: u8 = @intCast(idx % 256);
+        var val:u256 = 1;
         val <<= rem;
 
         self.bitmap[div] |= val;
     }
 
-    pub fn check(self: BitMap, idx: u128) bool {
-        const div: usize = @intCast(idx / 128);
-        const rem: u7 = @intCast(idx % 128);
+    pub fn check(self: BitMap, idx: usize) bool {
+        const div: usize = @intCast(idx / 256);
+        const rem: u8 = @intCast(idx % 256);
 
-        var mask: u128 = 1;
+        var mask: u256 = 1;
         mask <<= rem;
         return (self.bitmap[div] & mask) != 0;
     }
@@ -53,7 +53,7 @@ pub fn main() !void {
 
     const n: u128 = 1_000_000_000;
     const n_sqrt = sqrt(n);
-    const len = n / (3 * 128) + 1;
+    const len = n / (3 * 256) + 1;
 
     std.debug.print("n: {}\n", .{n});
     std.debug.print("len: {}\n", .{len});
@@ -63,11 +63,11 @@ pub fn main() !void {
 
     const start_time = std.time.nanoTimestamp();
 
-    var i: u128 = 5;
+    var i: usize = 5;
     while (i <= n_sqrt) {
         if (!primes.check(i / 3 - 1)) {
             var idx = i * i;
-            var cnt: u128 = 0;
+            var cnt: usize = 0;
 
             while (idx <= n) {
                 primes.set(idx / 3 - 1);
@@ -84,7 +84,7 @@ pub fn main() !void {
 
         if (!primes.check(i / 3 - 1)) {
             var idx = i * i;
-            var cnt: u128 = 0;
+            var cnt: usize = 0;
 
             while (idx < n_sqrt) {
                 primes.set(idx / 3 - 1);
